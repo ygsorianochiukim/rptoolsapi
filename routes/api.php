@@ -10,6 +10,7 @@ Route::get('/user', function (Request $request) {
 })->middleware('auth:sanctum');
 
 Route::get('/diagrams/display', [DiagramController::class , 'displayDiagrams']);
+Route::get('/diagrams/display/{id}', [DiagramController::class , 'displayDiagramsbyID']);
 Route::post('/diagrams/store', [DiagramController::class , 'storeDiagrams']);
 Route::put('/diagrams/update/{id}', [DiagramController::class , 'updateDiagrams']);
 

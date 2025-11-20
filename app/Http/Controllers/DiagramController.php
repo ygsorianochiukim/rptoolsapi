@@ -12,6 +12,10 @@ class DiagramController extends Controller
         $diagramsList = Diagrams::all();
         return response()->json($diagramsList);
     }
+    public function displayDiagramsbyID($id){
+        $diagramsList = Diagrams::where('id', $id)->first();
+        return response()->json($diagramsList);
+    }
 
     public function storeDiagrams(Request $request){
         $diagramsFields = $request->validate([
