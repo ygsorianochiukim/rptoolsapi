@@ -19,5 +19,7 @@ class Diagrams extends Model
         'created_by',
         'created_date',
         'sheet_url',
+        'dependency',
+        'dependency_value',
     ];
 }
