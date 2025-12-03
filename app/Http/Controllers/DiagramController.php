@@ -9,7 +9,7 @@ use Illuminate\Http\Request;
 class DiagramController extends Controller
 {
     public function displayDiagrams(){
-        $diagramsList = Diagrams::all();
+        $diagramsList = Diagrams::orderByDesc('id')->get();
         return response()->json($diagramsList);
     }
     public function displayDiagramsbyID($id){
