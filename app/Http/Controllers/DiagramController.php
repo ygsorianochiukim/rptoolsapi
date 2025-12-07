@@ -57,10 +57,7 @@ class DiagramController extends Controller
             'sheet_url' => 'string|nullable', 
             'dependency' => 'string|nullable', 
             'dependency_value' => 'string|nullable', 
-            's_bpartner_i_employee_id' => 'integer|required', 
-            'created_by' => 'integer|required', 
         ]);
-        $diagramsFields['is_shareable'] = false;
         $diagramsFields['is_active'] = true;
         $diagramsFields['created_date'] = Carbon::now();
 
@@ -69,6 +66,44 @@ class DiagramController extends Controller
         return response()->json([
             'message' => 'Diagram updated successfully',
             'data' => $diagram
+        ]);
+    }
+
+    public function updateShareable(Request $request, $id)
+    {
+        $diagram = Diagrams::find($id);
+
+        if (!$diagram) {
+            return response()->json(['message' => 'Diagram not found'], 404);
+        }
+
+        $diagramsFields = $request->validate([
+            'is_shareable' => 'boolean|required', 
+        ]);
+        $diagram->update($diagramsFields);
+
+        return response()->json([
+            'message' => 'Diagram updated successfully',
+            'data' => $diagram
+        ]);
+    }
+    public function displayUserDiagrams($userId)
+    {
+        $owned = Diagrams::where('created_by', $userId)
+            ->where('is_active', true)
+            ->get();
+
+        $shared = Diagrams::join('shareables', 'diagrams_information.id', '=', 'shareables.diagram_id')
+            ->where('shareables.user_id', $userId)
+            ->where('diagrams_information.is_shareable', true)
+            ->where('diagrams_information.is_active', true)
+            ->select('diagrams_information.*')
+            ->get();
+        $results = $owned->merge($shared)->unique('id')->values();
+
+        return response()->json([
+            'owned' => $owned->values(),
+            'shared' => $shared->values()
         ]);
     }
 }
